@@ -56,16 +56,16 @@ public class FileTable extends JScrollPane {
 		return s.format(fileDate);
 	}
 
-	long getSize(File f) {
-		long fileSize = f.length() / 1024;
-
-		return fileSize;
-	}
-
 	String getExtension(String s) {
 		int pos = s.lastIndexOf(".");
 		String fileExtension = s.substring(pos + 1);
 
 		return fileExtension;
+	}
+
+	long getSize(File f) {
+		long fileSize = f.length() / 1024;
+
+		return fileSize;
 	}
 }
