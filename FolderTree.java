@@ -23,16 +23,21 @@ public class FolderTree extends JTree implements TreeWillExpandListener, TreeSel
 		
 		DefaultTreeModel model = new DefaultTreeModel(root);
 		setModel(model);
-
 	}
 
 	private void initTree() {
+		/**
+		 * 트리와 루트노드의 초기세팅 담당. 
+		 */
 		addTreeWillExpandListener(this);
 
 		root = new DefaultMutableTreeNode("root");
 	}
 
 	private void initFileSystem() {
+		/**
+		 * 루트노드의 자식노드 초기화. 즉 루트디렉토리 세팅.
+		 */
 		File[] dir = File.listRoots();
 		for (int i = 0; i < dir.length; i++) {
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(dir[i].toString());
@@ -68,7 +73,7 @@ public class FolderTree extends JTree implements TreeWillExpandListener, TreeSel
 		 * Tree가 확장될 때 불리는 리스너로 파일경로로부터 자식 디렉토리를 노드에 추가한다.
 		 * @param (event) event.getPath()로부터 파일경로를 추출하여 노드 확장에 사용.
 		 */
-		setSelectionPath(event.getPath());
+		setSelectionPath(event.getPath()); // 화살표 버튼으로 디렉토리 확장 시 생길 수 있는 오류를 잡아준다고 함.
 		String path = getPath(event.getPath());
 		if(path.trim().length() == 0)
 			return;
