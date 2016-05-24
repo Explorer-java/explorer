@@ -3,6 +3,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 
@@ -21,6 +22,7 @@ public class DrawFrame extends JFrame {
 	private void initFrame(){ 
 		JSplitPane folderPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT); // Center
 		FolderTree folderTree = new FolderTree(); // left comp
+		JScrollPane folderScroll = new JScrollPane(folderTree);
 		
 		JSplitPane filePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT); // Right
 		FileTable fileTable = new FileTable(); // right top comp
@@ -28,7 +30,7 @@ public class DrawFrame extends JFrame {
 		filePane.setTopComponent(fileTable);
 		filePane.setBottomComponent(dataField);
 		
-		folderPane.setLeftComponent(folderTree);
+		folderPane.setLeftComponent(folderScroll);
 		folderPane.setRightComponent(filePane);
 		
 		add(folderPane, "Center");
