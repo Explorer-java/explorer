@@ -25,18 +25,8 @@ public class DrawFrame extends JFrame {
 		JSplitPane filePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT); // Right
 		FileTable fileTable = new FileTable(); // right top comp
         filePane.setTopComponent(fileTable);
-        JPanel bottomPane = new JPanel(); // right bottom comp
-        filePane.setBottomComponent(bottomPane);
-        bottomPane.setLayout(new BorderLayout());
-
-        JPanel menuPane = new JPanel(); // dataField's menuBar
-        menuPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        JButton saveButton = new JButton("저장");
-        saveButton.addActionListener(new PressingListener());
-        menuPane.add(saveButton);
-        bottomPane.add(menuPane, BorderLayout.NORTH);
-
-        bottomPane.add(dataField, BorderLayout.CENTER);
+        DataField dataField = new DataField(); // right bottom comp
+        filePane.setBottomComponent(dataField);
 		
 		folderPane.setLeftComponent(folderTree);
 		folderPane.setRightComponent(filePane);
@@ -46,14 +36,4 @@ public class DrawFrame extends JFrame {
 		folderPane.setResizeWeight(0.2); // 좌우 diver 위치 조절
 	}
 
-    private class PressingListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                dataField.saveContent();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
 }
