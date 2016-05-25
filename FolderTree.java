@@ -2,6 +2,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javax.swing.JFrame;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
@@ -14,10 +15,13 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 public class FolderTree extends JTree implements TreeWillExpandListener, TreeSelectionListener {
-	private final String EMPTYTAG = "EMPTY";
+	private final String EMPTYTAG = "NO MORE DIRECTORY";
 	private DefaultMutableTreeNode root;
+	private DrawFrame f;
 
-	public FolderTree() {
+	public FolderTree(DrawFrame f) {
+		this.f = f;
+		
 		initTree();
 		initFileSystem();
 		
@@ -96,14 +100,27 @@ public class FolderTree extends JTree implements TreeWillExpandListener, TreeSel
 			
 			if(dirCount == 0) // 폴더에 파일만 존재 할 때 
 				lastNode.add(new DefaultMutableTreeNode(EMPTYTAG));
+			
 		}else{ // 빈 폴더 일 때 
 			lastNode.add(new DefaultMutableTreeNode(EMPTYTAG));
 		}
+
+		// 파일 테이블 재생성
+		f.setFileTable(new FileTable(childrenFiles));
 	}
 
 	@Override
 	public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
 		// TODO Auto-generated method stub
+		String path = getPath(event.getPath());
+		if(path.trim().length() == 0)
+			return;
+		
+		File parentFile = new File(path); 
+		File[] childrenFiles = parentFile.listFiles();
+
+		// 파일 테이블 재생성
+		f.setFileTable(new FileTable(childrenFiles));
 
 	}
 
