@@ -5,18 +5,20 @@ import java.awt.event.ActionListener;
 import java.io.*;
 
 public class DataField extends JTabbedPane{
-    JPanel jPanel = new JPanel(new BorderLayout());
+    private final int MAX_HISTORY = 3;
+    JPanel jPanel = new JPanel(new BorderLayout()); // 화면을 둘로 쪼갠다: upperPane + textField
     JTextArea textField = new JTextArea();
-    JLabel[] historyLabel = new JLabel[3];
+    JLabel[] historyLabel = new JLabel[MAX_HISTORY];
 
-    String[] fileHistory = new String[3];
+    String[] fileHistory = new String[MAX_HISTORY];
     int historyIndex;
 
     String filePath = "//Users//soeun//Desktop//file.txt";
+    String historyPath = "//Users//soeun//Desktop//history.txt";    //TODO: make history.txt file
     /**
      * @param String filePath
      * */
-	public DataField() throws IOException { //TODO: add parameter, this.filepath = filepath;
+	public DataField() throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
         pullContent(textField);
         setFileHistory();
         drawFrame();
@@ -24,31 +26,27 @@ public class DataField extends JTabbedPane{
 	}
 
     private void drawFrame() {
-        JPanel dataFieldPane = new JPanel();
-        dataFieldPane.setLayout(new GridLayout(1,2));
+        JPanel upperPane = new JPanel();    // 양쪽으로 정렬하기 위함: historyLabel[] + saveButton
+        upperPane.setLayout(new GridLayout(1,2));   // 서로 다른 레이아웃매니저를 설정할 수 있음
 
-        JPanel historyPane = new JPanel();  // dataField's historyList
-        historyPane.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-        for(int i=0; i<3; i++) {
+        for(int i=0; i<MAX_HISTORY; i++) {            // init historyLable[]
             historyLabel[i] = new JLabel(fileHistory[i]);
-            dataFieldPane.add(historyLabel[i]);
+            upperPane.add(historyLabel[i]);
         }
 
-        JPanel menuPane = new JPanel(); // dataField's menuBar
+        JPanel menuPane = new JPanel();     // 오른쪽으로 정렬하기 위함: saveButton
         menuPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
         JButton saveButton = new JButton("저장");
         saveButton.addActionListener(new PressingListener());
 
         menuPane.add(saveButton);
+        upperPane.add(menuPane);
 
-        dataFieldPane.add(menuPane);
-
-        jPanel.add(dataFieldPane, BorderLayout.NORTH);
+        jPanel.add(upperPane, BorderLayout.NORTH);
         jPanel.add(textField, BorderLayout.CENTER);
     }
 
-    private class PressingListener implements ActionListener {
+    private class PressingListener implements ActionListener {  // to listen: saveButton
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -59,12 +57,11 @@ public class DataField extends JTabbedPane{
         }
     }
 
-    void setFileHistory() throws IOException {
-        String historyPath = "//Users//soeun//Desktop//history.txt";    //TODO: change to floating route
+    private void setFileHistory() throws IOException {  // set fileHistory[] from history.txt
         FileReader fileReader = new FileReader(historyPath);
         BufferedReader reader = new BufferedReader(fileReader);
 
-        for(historyIndex=0; historyIndex<3; historyIndex++) {
+        for(historyIndex=0; historyIndex<MAX_HISTORY; historyIndex++) {
             String line = reader.readLine();
             if(line==null) break;
             fileHistory[historyIndex] = line;
@@ -73,10 +70,21 @@ public class DataField extends JTabbedPane{
         fileReader.close();
     }
 
-    private void pullContent(JTextArea textField) throws IOException {
+    private void saveHistory() throws IOException {
+        new File(historyPath).delete();
+        PrintWriter printWriter = new PrintWriter(historyPath);
+
+        for(int i=0; i<MAX_HISTORY; i++)
+            if(fileHistory[i]!=null)
+                printWriter.println(fileHistory[i]);
+            else break;
+        printWriter.close();
+    }
+
+    private void pullContent(JTextArea textField) throws IOException {  // filePath 파일의 내용 -> textField에 불러옴
         FileReader fileReader = new FileReader(filePath);
         BufferedReader reader = new BufferedReader(fileReader);
-        textField.setText("");      // init
+        textField.setText("");      // make empty textField
 
         while(true) {
             String line = reader.readLine();
@@ -87,21 +95,25 @@ public class DataField extends JTabbedPane{
         fileReader.close();
     }
 
-    void saveContent() throws IOException {
-        new File(filePath).delete();
+    void saveContent() throws IOException { // textField의 내용 -> filePath 파일에 저장
+        new File(filePath).delete();    // 덮어쓰기위해 기존 파일을 지움
         FileWriter fileWriter = new FileWriter(filePath, true);
         textField.write(fileWriter);
         fileWriter.close();
-        System.out.println(historyIndex);
-        if(historyIndex==2 && fileHistory[historyIndex]!=null) {
+
+        if(historyIndex==MAX_HISTORY-1 && fileHistory[historyIndex]!=null) {
             for (int i = 0; i < historyIndex; i++)
                 fileHistory[i] = fileHistory[i + 1];
-//       else if(fileHistory[0].isEmpty())
+
         } else if(fileHistory[historyIndex]!=null) {
             historyIndex++;
         }
 
-        fileHistory[historyIndex] = filePath;
-        historyLabel[historyIndex].setText(filePath);
+        if(fileHistory[0]==null
+                || !fileHistory[historyIndex-1].equals(filePath)) {
+            fileHistory[historyIndex] = filePath;
+            historyLabel[historyIndex].setText(filePath);
+        }
+        saveHistory();
     }
 }
