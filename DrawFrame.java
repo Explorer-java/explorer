@@ -1,12 +1,14 @@
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.io.IOException;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
 public class DrawFrame extends JFrame {
-    DataField dataField = new DataField();  // @dataField(@right bottom comp) main content
+	private FileTable fileTable;
+	private JSplitPane filePane;
+	private DataField dataField;
 
 	public DrawFrame() throws IOException {
 		setTitle("Explorer");
@@ -20,20 +22,30 @@ public class DrawFrame extends JFrame {
 	
 	private void initFrame() throws IOException {
 		JSplitPane folderPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT); // Center
-		FolderTree folderTree = new FolderTree(); // left comp
+		FolderTree folderTree = new FolderTree(this); // left comp
+		JScrollPane folderScroll = new JScrollPane(folderTree);
 		
-		JSplitPane filePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT); // Right
-		FileTable fileTable = new FileTable(); // right top comp
-        filePane.setTopComponent(fileTable);
-        DataField dataField = new DataField(); // right bottom comp
-        filePane.setBottomComponent(dataField);
+		filePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT); // Right
+		fileTable = new FileTable(); // right top comp
+		filePane.setTopComponent(fileTable);
+		dataField = new DataField(); // right bottom comp
+		filePane.setBottomComponent(dataField);
 		
-		folderPane.setLeftComponent(folderTree);
+		folderPane.setLeftComponent(folderScroll);
 		folderPane.setRightComponent(filePane);
 		
 		add(folderPane, "Center");
 		filePane.setResizeWeight(0.5); // 상하 diver 위치 조절
 		folderPane.setResizeWeight(0.2); // 좌우 diver 위치 조절
 	}
-
+	
+	public void setFileTable(FileTable table){
+		fileTable = table;
+		filePane.setTopComponent(fileTable);
+	}
+	
+	public void setDataField(DataField field) throws IOException{
+		dataField = field;
+		filePane.setBottomComponent(dataField);
+	}
 }

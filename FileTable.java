@@ -1,17 +1,106 @@
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FileTable extends JScrollPane{
-	static String columnNames[] = { "상품번호", "상품이름", "상품가격", "상품설명" };
-
-	static Object rowData[][] ={
-		{ 1, "맛동산", 100, "오리온" },
-		{ 2, "아폴로", 200, "불량식품" },
-		{ 3, "칸쵸코", 300, "과자계의 레전드" } };
-		
+	private DrawFrame f;
+	private Object columnNames[] = {"이름", "수정한 날짜", "유형", "크기(kb)"};
+	private Object rowData[][] = new Object[1000][4];
+	private String filePath;
+	
 	public FileTable(){
-		JTable table = new JTable(rowData,columnNames);
-		setViewportView(table);
+		setTable();
 	}
+
+	public FileTable(File[] fileList, String path, DrawFrame f) {
+		this.f = f;
+		this.filePath = path;
+		
+		if(fileList == null || fileList.length == 0){
+			setTable();
+			return;
+		}
+		
+		int i = 0;
+		for (File tempFile : fileList) { // 배열의 저장된 파일을 차례로 tempFile에 저장
+			String name;
+			String date;
+			String extension;
+			long size;
+
+			if(tempFile.isDirectory()) { // tempFile이 폴더일 경우
+				name = getFileName(tempFile);
+				date = getDate(tempFile);
+				extension = "폴더";
+				size = getSize(tempFile);
+			}
+			else { // tempFile이 파일일 경우
+				name = getFileName(tempFile);
+				date = getDate(tempFile);
+				extension = getExtension(name);
+				size = getSize(tempFile);
+			}
+
+			rowData[i][0] = name;
+			rowData[i][1] = date;
+			rowData[i][2] = extension;
+			rowData[i][3] = size;
+
+			i++;
+		}
+
+		setTable();
+	}
+	
+	private void setTable(){
+		JTable table = new JTable(rowData,columnNames);
+		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {		
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				String realPath = filePath+table.getValueAt(table.getSelectedRow(), 0).toString();
+				System.out.println(realPath);
+				try {
+					f.setDataField(new DataField(realPath));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		setViewportView(table); // 테이블 생성
+	}
+
+	private String getFileName(File f) {
+		String fileName = f.getName();
+
+		return  fileName;
+	} // 파일의 이름을 얻는 메소드
+
+	private String getDate(File f) {
+		Date fileDate = new Date(f.lastModified());
+		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd a h:mm");
+
+		return s.format(fileDate);
+	} // 파일의 수정한 날짜를 얻는 메소드
+
+	private String getExtension(String s) {
+		int pos = s.lastIndexOf(".");
+		String fileExtension = s.substring(pos + 1);
+
+		return fileExtension;
+	} // 파일의 유형을 얻는 메소드
+
+	private long getSize(File f) {
+		long fileSize = f.length() / 1024;
+
+		return fileSize;
+	} // 파일의 크기를 얻는 메소드
 }

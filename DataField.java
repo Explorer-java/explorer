@@ -6,20 +6,25 @@ import java.io.*;
 
 public class DataField extends JTabbedPane{
     private final int MAX_HISTORY = 3;
-    JPanel jPanel = new JPanel(new BorderLayout()); // 화면을 둘로 쪼갠다: upperPane + textField
-    JTextArea textField = new JTextArea();
-    JLabel[] historyLabel = new JLabel[MAX_HISTORY];
+    private JPanel jPanel = new JPanel(new BorderLayout()); // 화면을 둘로 쪼갠다: upperPane + textField
+    private JTextArea textField = new JTextArea();
+    private JLabel[] historyLabel = new JLabel[MAX_HISTORY];
 
-    String[] fileHistory = new String[MAX_HISTORY];
-    int historyIndex;
+    private String[] fileHistory = new String[MAX_HISTORY];
+    private int historyIndex;
 
-    String filePath = "//Users//soeun//Desktop//file.txt";
-    String historyPath = "//Users//soeun//Desktop//history.txt";    //TODO: make history.txt file
+    private String filePath;
+    private String historyPath = "/Users/ppang/Documents/history.txt";    //TODO: make history.txt file
     /**
      * @param String filePath
      * */
-	public DataField() throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
-        pullContent(textField);
+    public DataField(){
+    	
+    }
+    
+	public DataField(String path) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
+        this.filePath = path;
+		pullContent(textField);
         setFileHistory();
         drawFrame();
         add(jPanel);
@@ -95,7 +100,7 @@ public class DataField extends JTabbedPane{
         fileReader.close();
     }
 
-    void saveContent() throws IOException { // textField의 내용 -> filePath 파일에 저장
+    private void saveContent() throws IOException { // textField의 내용 -> filePath 파일에 저장
         new File(filePath).delete();    // 덮어쓰기위해 기존 파일을 지움
         FileWriter fileWriter = new FileWriter(filePath, true);
         textField.write(fileWriter);
