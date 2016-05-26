@@ -14,6 +14,7 @@ public class DataField extends JTabbedPane{
     private int historyIndex;
 
     private String filePath;
+    private String rootPath;
     private String historyPath = "/Users/ppang/Documents/history.txt";    //TODO: make history.txt file
     /**
      * @param String filePath
@@ -23,6 +24,8 @@ public class DataField extends JTabbedPane{
     }
     
 	public DataField(String path) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
+		this.rootPath = File.listRoots()[0].toString();
+		this.historyPath = "";
         this.filePath = path;
 		pullContent(textField);
         setFileHistory();
