@@ -25,7 +25,6 @@ public class DataField extends JTabbedPane{
     
 	public DataField(String path) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
 		this.rootPath = File.listRoots()[0].toString();
-		this.historyPath = "";
         this.filePath = path;
 		pullContent(textField);
         setFileHistory();
@@ -49,9 +48,11 @@ public class DataField extends JTabbedPane{
 
         menuPane.add(saveButton);
         upperPane.add(menuPane);
+        
+        JScrollPane scroll = new JScrollPane(textField);
 
         jPanel.add(upperPane, BorderLayout.NORTH);
-        jPanel.add(textField, BorderLayout.CENTER);
+        jPanel.add(scroll, BorderLayout.CENTER);
     }
 
     private class PressingListener implements ActionListener {  // to listen: saveButton
