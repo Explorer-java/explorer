@@ -17,8 +17,8 @@ public class DataField extends JTabbedPane{
     private String filePath;
     private String historyPath;    //TODO: make history.txt file
 
-    public DataField(){
-    	
+    public DataField()throws IOException {
+        this(null);
     }
     
 	public DataField(String path) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
@@ -26,10 +26,9 @@ public class DataField extends JTabbedPane{
         this.historyPath = currDir + "history.txt";
         this.filePath = path;
         setFileHistory();
-
-        pullContent(textField);
+        if(filePath!=null) pullContent(textField);
         drawFrame();
-        addHistory(filePath);
+        if(filePath!=null) addHistory(filePath);
         add(jPanel);
 	}
 
@@ -65,6 +64,13 @@ public class DataField extends JTabbedPane{
                 e1.printStackTrace();
             }
         }
+    }
+
+    private void saveContent() throws IOException { // textField의 내용 -> filePath 파일에 저장
+        new File(filePath).delete();    // 덮어쓰기위해 기존 파일을 지움
+        FileWriter fileWriter = new FileWriter(filePath, true);
+        textField.write(fileWriter);
+        fileWriter.close();
     }
 
     private void setFileHistory() throws IOException {  // set fileHistory[] from history.txt
@@ -112,13 +118,6 @@ public class DataField extends JTabbedPane{
         }
         reader.close();
         fileReader.close();
-    }
-
-    private void saveContent() throws IOException { // textField의 내용 -> filePath 파일에 저장
-        new File(filePath).delete();    // 덮어쓰기위해 기존 파일을 지움
-        FileWriter fileWriter = new FileWriter(filePath, true);
-        textField.write(fileWriter);
-        fileWriter.close();
     }
 
     private void addHistory(String filePath) throws IOException {
