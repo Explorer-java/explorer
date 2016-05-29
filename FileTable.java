@@ -1,23 +1,28 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
 public class FileTable extends JScrollPane{
 	private DrawFrame f;
 	private Object columnNames[] = {"이름", "수정한 날짜", "유형", "크기(kb)"};
-	private Object rowData[][] = new Object[1000][4];
+	private Object rowData[][];
 	private String filePath;
 	
 	public FileTable(){
+		rowData = new Object[1][columnNames.length];
 		setTable();
 	}
 
 	public FileTable(File[] fileList, String path, DrawFrame f) {
+		rowData = new Object[fileList.length][columnNames.length];
 		this.f = f;
 		this.filePath = path;
 		
@@ -57,15 +62,32 @@ public class FileTable extends JScrollPane{
 		setTable();
 	}
 	
-	private void setTable(){
+	private void setTable(){	
 		JTable table = new JTable(rowData,columnNames);
+		
+		// table sort by header
+		table.setAutoCreateRowSorter(true);
+		TableRowSorter<TableModel> tableSorter = new TableRowSorter<TableModel>(table.getModel());
+		
+		tableSorter.setComparator(3, new Comparator<Long>() {
+			  @Override
+			  public int compare(Long num1, Long num2) {
+				  if(num1 > num2)
+					  return 1;
+				  else if(num1 == num2)
+					  return 0;
+				  else
+					  return -1;
+			  }
+			});
+			
+		table.setRowSorter(tableSorter);
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {		
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
 				String realPath = filePath+table.getValueAt(table.getSelectedRow(), 0).toString();
-				//System.out.println(realPath);
 				try {
 					f.setDataField(new DataField(realPath));
 				} catch (IOException e1) {
