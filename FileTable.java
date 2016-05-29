@@ -89,7 +89,7 @@ public class FileTable extends JScrollPane{
 				// TODO Auto-generated method stub
 				String realPath = filePath+table.getValueAt(table.getSelectedRow(), 0).toString();
 				try {
-					f.setDataField(new DataField(realPath));
+					f.setDataField(new DataField(realPath, f));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

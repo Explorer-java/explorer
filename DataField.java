@@ -1,15 +1,15 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 
 public class DataField extends JTabbedPane{
+    private DrawFrame f;
     private final int MAX_HISTORY = 3;
     private JPanel jPanel = new JPanel(new BorderLayout()); // 화면을 둘로 쪼갠다: upperPane + textField
     private JTextArea textField = new JTextArea();
-    private JLabel[] historyLabel = new JLabel[MAX_HISTORY];
 
+    private JLabel[] historyLabel = new JLabel[MAX_HISTORY];
     private String[] fileHistory = new String[MAX_HISTORY];
     private int historyIndex;
 
@@ -17,14 +17,16 @@ public class DataField extends JTabbedPane{
     private String filePath;
     private String historyPath;    //TODO: make history.txt file
 
-    public DataField()throws IOException {
-        this(null);
+    public DataField(DrawFrame f)throws IOException {
+        this(null, f);
     }
     
-	public DataField(String path) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
+	public DataField(String path, DrawFrame f) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
         this.currDir = ExplorerMain.class.getResource(".").getPath();
         this.historyPath = currDir + "history.txt";
         this.filePath = path;
+        this.f = f;
+
         setFileHistory();
         if(filePath!=null) pullContent(textField);
         drawFrame();
@@ -38,6 +40,7 @@ public class DataField extends JTabbedPane{
 
         for(int i=0; i<MAX_HISTORY; i++) {            // init historyLable[]
             historyLabel[i] = new JLabel(fileHistory[i]);
+            historyLabel[i].addMouseListener(new HistoryListener());
             upperPane.add(historyLabel[i]);
         }
 
@@ -53,6 +56,18 @@ public class DataField extends JTabbedPane{
 
         jPanel.add(upperPane, BorderLayout.NORTH);
         jPanel.add(scroll, BorderLayout.CENTER);
+    }
+
+    private class HistoryListener extends MouseAdapter {   // to listen: historyLabel[i]
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JLabel selectedLabel = (JLabel)e.getSource();
+            try {
+                f.setDataField(new DataField(selectedLabel.getText(), f));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 
     private class PressingListener implements ActionListener {  // to listen: saveButton
@@ -84,13 +99,11 @@ public class DataField extends JTabbedPane{
             fileReader = new FileReader(historyPath);
         }
         BufferedReader reader = new BufferedReader(fileReader);
-        System.out.println("historyIndex[" + historyIndex + "] @setFileHistory()-1");
         for(historyIndex=0; historyIndex<MAX_HISTORY; historyIndex++) {
             String line = reader.readLine();
             if(line==null) break;
             fileHistory[historyIndex] = line;
         }
-        System.out.println("historyIndex[" + historyIndex + "] @setFileHistory()-2");
         reader.close();
         fileReader.close();
     }
@@ -121,7 +134,6 @@ public class DataField extends JTabbedPane{
     }
 
     private void addHistory(String filePath) throws IOException {
-        System.out.println("historyIndex[" + historyIndex + "] @addFileHistory()");
         if(fileHistory[0]!=null)
             for(int i=0; i<MAX_HISTORY; i++)                    // 이전에
                 if(fileHistory[i]!=null

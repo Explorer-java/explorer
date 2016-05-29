@@ -28,7 +28,7 @@ public class DrawFrame extends JFrame {
 		filePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT); // Right
 		fileTable = new FileTable(); // right top comp
 		filePane.setTopComponent(fileTable);
-		dataField = new DataField(); // right bottom comp
+		dataField = new DataField(this); // right bottom comp
 		filePane.setBottomComponent(dataField);
 		
 		folderPane.setLeftComponent(folderScroll);
