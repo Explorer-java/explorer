@@ -1,10 +1,13 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 
 public class FileTable extends JScrollPane{
@@ -59,6 +62,23 @@ public class FileTable extends JScrollPane{
 	
 	private void setTable(){
 		JTable table = new JTable(rowData,columnNames);
+		
+		// table sort by header
+		table.setAutoCreateRowSorter(true);
+		TableRowSorter<TableModel> tableSorter = new TableRowSorter<TableModel>(table.getModel());
+		
+		tableSorter.setComparator(3, new Comparator<Long>() {
+			  @Override
+			  public int compare(Long num1, Long num2) {
+				  if(num1 > num2)
+					  return 1;
+				  else if(num1 == num2)
+					  return 0;
+				  else
+					  return -1;
+			  }
+			});
+		table.setRowSorter(tableSorter);
 		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {		
 			@Override
