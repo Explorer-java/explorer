@@ -13,22 +13,23 @@ public class DataField extends JTabbedPane{
     private String[] fileHistory = new String[MAX_HISTORY];
     private int historyIndex;
 
+    private String currDir;
     private String filePath;
-    private String rootPath;
-    private String historyPath = "/Users/ppang/Documents/history.txt";    //TODO: make history.txt file
-    /**
-     * @param String filePath
-     * */
+    private String historyPath;    //TODO: make history.txt file
+
     public DataField(){
     	
     }
     
 	public DataField(String path) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
-		this.rootPath = File.listRoots()[0].toString();
+        this.currDir = ExplorerMain.class.getResource(".").getPath();
+        this.historyPath = currDir + "history.txt";
         this.filePath = path;
-		pullContent(textField);
         setFileHistory();
+
+        pullContent(textField);
         drawFrame();
+        addHistory(filePath);
         add(jPanel);
 	}
 
@@ -67,19 +68,28 @@ public class DataField extends JTabbedPane{
     }
 
     private void setFileHistory() throws IOException {  // set fileHistory[] from history.txt
-        FileReader fileReader = new FileReader(historyPath);
-        BufferedReader reader = new BufferedReader(fileReader);
+        FileReader fileReader;
+        try {
+            fileReader = new FileReader(historyPath);
 
+        } catch (IOException e) {
+            PrintWriter printWriter = new PrintWriter(historyPath);
+            printWriter.close();
+            fileReader = new FileReader(historyPath);
+        }
+        BufferedReader reader = new BufferedReader(fileReader);
+        System.out.println("historyIndex[" + historyIndex + "] @setFileHistory()-1");
         for(historyIndex=0; historyIndex<MAX_HISTORY; historyIndex++) {
             String line = reader.readLine();
             if(line==null) break;
             fileHistory[historyIndex] = line;
         }
+        System.out.println("historyIndex[" + historyIndex + "] @setFileHistory()-2");
         reader.close();
         fileReader.close();
     }
 
-    private void saveHistory() throws IOException {
+    private void saveHistory() throws IOException {     // historyPath 파일 <- fileHistory[]저장.
         new File(historyPath).delete();
         PrintWriter printWriter = new PrintWriter(historyPath);
 
@@ -109,20 +119,32 @@ public class DataField extends JTabbedPane{
         FileWriter fileWriter = new FileWriter(filePath, true);
         textField.write(fileWriter);
         fileWriter.close();
+    }
 
-        if(historyIndex==MAX_HISTORY-1 && fileHistory[historyIndex]!=null) {
-            for (int i = 0; i < historyIndex; i++)
-                fileHistory[i] = fileHistory[i + 1];
-
-        } else if(fileHistory[historyIndex]!=null) {
-            historyIndex++;
+    private void addHistory(String filePath) throws IOException {
+        System.out.println("historyIndex[" + historyIndex + "] @addFileHistory()");
+        if(fileHistory[0]!=null)
+            for(int i=0; i<MAX_HISTORY; i++)                    // 이전에
+                if(fileHistory[i]!=null
+                        && fileHistory[i].equals(filePath)) {   // 동일 history 존재할 때
+                    deleteHistory(i);                           // 중복되는 기존 history 지움
+                    historyIndex--;
+                }
+        if(historyIndex>=MAX_HISTORY) { // history 꽉 찼을 때
+            deleteHistory(0);           // 오래된 순으로 지움
+            historyIndex--;
         }
-
-        if(fileHistory[0]==null
-                || !fileHistory[historyIndex-1].equals(filePath)) {
-            fileHistory[historyIndex] = filePath;
-            historyLabel[historyIndex].setText(filePath);
-        }
+        fileHistory[historyIndex] = filePath;
+        for(int i=0; i<MAX_HISTORY; i++)
+            if(fileHistory[i]!=null)
+                historyLabel[i].setText(fileHistory[i]);
         saveHistory();
+    }
+
+    private void deleteHistory(int goalIndex) {
+        for(int i=goalIndex; i+1<MAX_HISTORY; i++)
+            if(fileHistory[i+1]!=null)
+                fileHistory[i] = fileHistory[i+1];
+            else fileHistory[i] = null;
     }
 }
