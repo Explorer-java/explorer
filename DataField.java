@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.io.*;
 
 public class DataField extends JTabbedPane{
+
     private DrawFrame f;
     private final int MAX_HISTORY = 3;
     private JPanel jPanel = new JPanel(new BorderLayout()); // 화면을 둘로 쪼갠다: upperPane + textField
@@ -15,13 +16,13 @@ public class DataField extends JTabbedPane{
 
     private String currDir;
     private String filePath;
-    private String historyPath;    //TODO: make history.txt file
+    private String historyPath;
 
     public DataField(DrawFrame f)throws IOException {
         this(null, f);
     }
     
-	public DataField(String path, DrawFrame f) throws IOException { //TODO: 인자 추가하기, this.filepath = filepath;
+	public DataField(String path, DrawFrame f) throws IOException {
         this.currDir = ExplorerMain.class.getResource(".").getPath();
         this.historyPath = currDir + "history.txt";
         this.filePath = path;

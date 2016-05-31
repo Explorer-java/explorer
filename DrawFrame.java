@@ -1,4 +1,5 @@
 
+import java.awt.*;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -24,6 +25,7 @@ public class DrawFrame extends JFrame {
 		JSplitPane folderPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT); // Center
 		FolderTree folderTree = new FolderTree(this); // left comp
 		JScrollPane folderScroll = new JScrollPane(folderTree);
+		folderScroll.setMinimumSize(new Dimension(150,200));
 		
 		filePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT); // Right
 		fileTable = new FileTable(); // right top comp
