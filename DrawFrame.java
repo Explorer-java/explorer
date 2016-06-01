@@ -1,10 +1,7 @@
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 
 public class DrawFrame extends JFrame {
 	private FileTable fileTable;
