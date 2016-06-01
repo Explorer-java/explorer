@@ -88,6 +88,7 @@ public class FileTable extends JScrollPane{
 			public void valueChanged(ListSelectionEvent e) {
 				// TODO Auto-generated method stub
 				String realPath = filePath+table.getValueAt(table.getSelectedRow(), 0).toString();
+
 				try {
 					f.setDataField(new DataField(realPath, f));
 				} catch (IOException e1) {
