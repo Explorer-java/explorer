@@ -106,7 +106,13 @@ public class FolderTree extends JTree implements TreeWillExpandListener{
 		}
 
 		// 파일 테이블 재생성
-		f.setFileTable(new FileTable(childrenFiles, path, f));
+		if(f.isIconView) {
+            f.setFileTable(new FileTable(childrenFiles, path, f));
+            f.setFileGrid(new FileGrid(childrenFiles, path, f));
+        } else {
+            f.setFileGrid(new FileGrid(childrenFiles, path, f));
+            f.setFileTable(new FileTable(childrenFiles, path, f));
+        }
 	}
 
 	@Override

@@ -82,11 +82,22 @@ public class DataField extends JTabbedPane{
         }
     }
 
+    private String getExtension(String s) {
+        int pos = s.lastIndexOf(".");
+        String fileExtension = s.substring(pos + 1);
+
+        return fileExtension;
+    } // 파일의 유형을 얻는 메소드
+
     private void saveContent() throws IOException { // textField의 내용 -> filePath 파일에 저장
-        new File(filePath).delete();    // 덮어쓰기위해 기존 파일을 지움
-        FileWriter fileWriter = new FileWriter(filePath, true);
-        textField.write(fileWriter);
-        fileWriter.close();
+        String fileExtension = getExtension(filePath);
+
+        if(fileExtension.equals("txt")) { // 파일 유형이 txt일 때만 내용 수정 후 저장 가능
+            new File(filePath).delete();    // 덮어쓰기위해 기존 파일을 지움
+            FileWriter fileWriter = new FileWriter(filePath, true);
+            textField.write(fileWriter);
+            fileWriter.close();
+        }
     }
 
     private void setFileHistory() throws IOException {  // set fileHistory[] from history.txt
@@ -121,17 +132,21 @@ public class DataField extends JTabbedPane{
     }
 
     private void pullContent(JTextArea textField) throws IOException {  // filePath 파일의 내용 -> textField에 불러옴
-        FileReader fileReader = new FileReader(filePath);
-        BufferedReader reader = new BufferedReader(fileReader);
-        textField.setText("");      // make empty textField
+        String fileExtension = getExtension(filePath);
 
-        while(true) {
-            String line = reader.readLine();
-            if(line==null) break;
-            textField.append(line+"\n");
+        if(fileExtension.equals("txt")) {
+            FileReader fileReader = new FileReader(filePath);
+            BufferedReader reader = new BufferedReader(fileReader);
+            textField.setText("");      // make empty textField
+
+            while (true) {
+                String line = reader.readLine();
+                if (line == null) break;
+                textField.append(line + "\n");
+            }
+            reader.close();
+            fileReader.close();
         }
-        reader.close();
-        fileReader.close();
     }
 
     private void addHistory(String filePath) throws IOException {
