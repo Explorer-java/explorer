@@ -46,8 +46,8 @@ public class DrawFrame extends JFrame {
         JPanel fileListMenu = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         fileList.add(fileListMenu, BorderLayout.NORTH);
         searchPane = new JPanel(new FlowLayout(FlowLayout.LEFT)); // 검색도구를 추가할 Panel 배치
-        searchPane.add(search); // 검색창 추가
         searchPane.add(info); // 검색정보 추가
+        searchPane.add(search); // 검색창 추가
         search.addActionListener(new SearchFileName()); // 검색창 이용을 위한 ActionListener 추가
         fileListMenu.add(searchPane, BorderLayout.WEST); // 검색 Panel 추가
 
