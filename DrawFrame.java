@@ -14,6 +14,7 @@ public class DrawFrame extends JFrame {
     private JPanel fileList;
     boolean isIconView;
 	FileTable fileTable;
+
     private FileGrid fileGrid;
 	private JSplitPane filePane;
 	private DataField dataField;
@@ -89,6 +90,11 @@ public class DrawFrame extends JFrame {
             }
 
             fileList = fileArray.toArray(new File[fileArray.size()]);
+
+            final File[] originFileList = fileList;
+            final String originFilePath = fileTable.filePath;
+            final DrawFrame originFrame = thisFrame;
+
             t = new FileTable(fileList, fileTable.filePath, thisFrame);
             g = new FileGrid(fileList, fileTable.filePath, thisFrame);
 
@@ -100,6 +106,9 @@ public class DrawFrame extends JFrame {
                 thisFrame.setFileTable(t);
             }
             fileArray.clear();
+            fileList = originFileList;
+            fileTable.filePath = originFilePath;
+            thisFrame = originFrame;
         }
     }
 	
