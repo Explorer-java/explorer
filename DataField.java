@@ -29,10 +29,19 @@ public class DataField extends JTabbedPane{
         this.f = f;
 
         setFileHistory();
-        if(filePath!=null) pullContent(textField);
-        drawFrame();
-        if(filePath!=null) addHistory(filePath);
-        add(jPanel);
+        if (filePath != null) {
+            pullContent(textField);
+            drawFrame();
+            {
+                int pos = filePath.lastIndexOf(".");
+                String fileExtension = filePath.substring(pos + 1);
+                if (fileExtension.equals("txt")) {
+                    addHistory(filePath);
+                }
+                add(jPanel);
+            }
+        }
+
 	}
 
     private void drawFrame() {

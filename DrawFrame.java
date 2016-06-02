@@ -11,7 +11,7 @@ public class DrawFrame extends JFrame {
     private JPanel searchPane; // 검색도구를 배치할 Panel 선언
     private JPanel fileList;
     boolean isIconView;
-	private FileTable fileTable;
+	FileTable fileTable;
     private FileGrid fileGrid;
 	private JSplitPane filePane;
 	private DataField dataField;
@@ -97,7 +97,6 @@ public class DrawFrame extends JFrame {
         if(isIconView) fileList.remove(fileGrid);
         else fileList.remove(fileTable);
 
-        System.out.println("hello~~^0^");
         fileGrid = grid;
         fileList.add(fileGrid);
         filePane.setTopComponent(fileList);
