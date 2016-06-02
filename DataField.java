@@ -134,7 +134,7 @@ public class DataField extends JTabbedPane{
     private void pullContent(JTextArea textField) throws IOException {  // filePath 파일의 내용 -> textField에 불러옴
         String fileExtension = getExtension(filePath);
 
-        if(fileExtension.equals("txt")) {
+        if(fileExtension.equals("txt")) { // 파일 유형이 txt일 때만 내용 열기
             FileReader fileReader = new FileReader(filePath);
             BufferedReader reader = new BufferedReader(fileReader);
             textField.setText("");      // make empty textField
