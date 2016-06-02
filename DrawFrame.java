@@ -76,6 +76,7 @@ public class DrawFrame extends JFrame {
         java.util.List<File> fileArray = new ArrayList<File>();
         File[] fileList;
         FileTable t;
+        FileGrid g;
         String realPath;
         public void actionPerformed(ActionEvent e) {
             String input = search.getText();
@@ -88,12 +89,19 @@ public class DrawFrame extends JFrame {
                     count++;
                 }
             }
-            if(count != 0) {
-                fileList = fileArray.toArray(new File[fileArray.size()]);
-                t = new FileTable(fileList, fileTable.filePath, thisFrame);
+
+            fileList = fileArray.toArray(new File[fileArray.size()]);
+            t = new FileTable(fileList, fileTable.filePath, thisFrame);
+            g = new FileGrid(fileList, fileTable.filePath, thisFrame);
+
+            if(thisFrame.isIconView) {
                 thisFrame.setFileTable(t);
-                fileArray.clear();
+                thisFrame.setFileGrid(g);
+            } else {
+                thisFrame.setFileGrid(g);
+                thisFrame.setFileTable(t);
             }
+            fileArray.clear();
         }
     }
 	
