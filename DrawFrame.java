@@ -80,13 +80,11 @@ public class DrawFrame extends JFrame {
         String realPath;
         public void actionPerformed(ActionEvent e) {
             String input = search.getText();
-            int count = 0;
             for(int i = 0; i < fileTable.rowData.length; i++) {
                 String fileName = fileTable.rowData[i][0].toString();
                 if(fileName.contains(input)) {
                     realPath = fileTable.filePath + fileName;
                     fileArray.add(new File(realPath));
-                    count++;
                 }
             }
 
