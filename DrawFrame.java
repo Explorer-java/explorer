@@ -1,11 +1,13 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.util.*;
 
 public class DrawFrame extends JFrame {
+    DrawFrame thisFrame = this;
     private JTextField search; // 검색창으로 사용할 TextField 선언
     private JLabel info; // 검색정보를 알려줄 Label 선언
     private JPanel searchPane; // 검색도구를 배치할 Panel 선언
@@ -71,15 +73,26 @@ public class DrawFrame extends JFrame {
 	}
 
     class SearchFileName implements ActionListener {
+        java.util.List<File> fileArray = new ArrayList<File>();
+        File[] fileList;
+        FileTable t;
+        String realPath;
         public void actionPerformed(ActionEvent e) {
             String input = search.getText();
             int count = 0;
             for(int i = 0; i < fileTable.rowData.length; i++) {
                 String fileName = fileTable.rowData[i][0].toString();
                 if(fileName.contains(input)) {
+                    realPath = fileTable.filePath + fileName;
+                    fileArray.add(new File(realPath));
                     count++;
                 }
-                info.setText("'" + input + "'" + "을(를) 포함한 파일은 " +  count + "개 입니다.");
+            }
+            if(count != 0) {
+                fileList = fileArray.toArray(new File[fileArray.size()]);
+                t = new FileTable(fileList, fileTable.filePath, thisFrame);
+                thisFrame.setFileTable(t);
+                fileArray.clear();
             }
         }
     }

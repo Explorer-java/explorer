@@ -11,9 +11,9 @@ import java.util.Date;
 
 public class FileTable extends JScrollPane {
 	private DrawFrame f;
-	private Object columnNames[] = {"이름", "수정한 날짜", "유형", "크기(kb)"};
+	public Object columnNames[] = {"이름", "수정한 날짜", "유형", "크기(kb)"};
 	public Object rowData[][];
-	private String filePath;
+    String filePath;
 
 	public FileTable() {
 		rowData = new Object[1][columnNames.length];
