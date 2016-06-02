@@ -74,13 +74,16 @@ public class FileGrid extends FileTable {
                     Component[] components = panel.getComponents();
                     String realPath = filePath + ((JLabel)components[1]).getText();
 
-                    if(getExtension(((JLabel)components[1]).getText()).equals("txt")) {
-                        panel.setBackground(Color.GRAY);
-                        try {
+                    try {
+                        if(getExtension(((JLabel)components[1]).getText()).equals("txt")) {
+                            panel.setBackground(Color.GRAY);
                             f.setDataField(new DataField(realPath, f));
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                        } else {
+                            panel.setBackground(Color.PINK);
+                            f.setDataField(new DataField(f));
                         }
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
                     }
                 }
 
