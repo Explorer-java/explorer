@@ -11,6 +11,7 @@ public class FolderTree extends JTree implements TreeWillExpandListener{
 	private final String EMPTYTAG = "NO MORE DIRECTORY";
 	private DefaultMutableTreeNode root;
 	private DrawFrame f;
+    public String realPath;
 
 	public FolderTree(DrawFrame f) {
 		this.f = f;
@@ -43,7 +44,7 @@ public class FolderTree extends JTree implements TreeWillExpandListener{
 		}
 	}
 
-	private String getPath(TreePath tp) {
+	public String getPath(TreePath tp) {
 		/**
 		 * TreePath로 부터 String형의 파일경로를 만들어 반환한다.
 		 * @param (TreePath) [root, /, .fseventsd] 같은 형태로 들어오면 
@@ -72,6 +73,8 @@ public class FolderTree extends JTree implements TreeWillExpandListener{
 		 */
 		setSelectionPath(event.getPath()); // 화살표 버튼으로 디렉토리 확장 시 생길 수 있는 오류를 잡아준다고 함.
 		String path = getPath(event.getPath());
+        realPath = path;
+
 		if(path.trim().length() == 0)
 			return;
 		
