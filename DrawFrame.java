@@ -13,7 +13,7 @@ public class DrawFrame extends JFrame {
     private JPanel searchPane; // 검색도구를 배치할 Panel 선언
     private JPanel fileList;
     boolean isIconView;
-	FileTable fileTable;
+    private FileTable fileTable;
     private FileGrid fileGrid;
 	private JSplitPane filePane;
 	private DataField dataField;
@@ -155,7 +155,7 @@ public class DrawFrame extends JFrame {
         });
     }
 
-    static public ImageIcon resizeImage(String imagePath, int x, int y) {
+    public ImageIcon resizeImage(String imagePath, int x, int y) {
         ImageIcon icon = new ImageIcon(imagePath);
 
         Image originalImage = icon.getImage();

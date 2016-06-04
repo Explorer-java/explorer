@@ -81,6 +81,7 @@ public class FileTable extends JScrollPane {
 
 		table.setRowSorter(tableSorter);
 
+		// select file
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {

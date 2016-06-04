@@ -116,7 +116,7 @@ public class FileGrid extends FileTable {
                 iconPath = currDir + "icon/folder.png";
             else iconPath = currDir + "icon/file_x.png";
         }
-        icon = DrawFrame.resizeImage(iconPath, 50, 50);
+        icon = f.resizeImage(iconPath, 50, 50);
         JLabel image = new JLabel("", icon, JLabel.CENTER);
         element.add(image, BorderLayout.CENTER);
         JLabel name = new JLabel(fileName, JLabel.CENTER);
