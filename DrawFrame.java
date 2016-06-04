@@ -8,15 +8,12 @@ import java.util.*;
 
 public class DrawFrame extends JFrame {;
     DrawFrame thisFrame = this;
-    FolderTree fTree = new FolderTree(this);
     private JTextField search; // 검색창으로 사용할 TextField 선언
     private JLabel info; // 검색정보를 알려줄 Label 선언
     private JPanel searchPane; // 검색도구를 배치할 Panel 선언
     private JPanel fileList;
     boolean isIconView;
 	FileTable fileTable;
-    FileTable originFileTable;
-
     private FileGrid fileGrid;
 	private JSplitPane filePane;
 	private DataField dataField;
@@ -53,13 +50,10 @@ public class DrawFrame extends JFrame {;
         searchPane = new JPanel(new FlowLayout(FlowLayout.LEFT)); // 검색도구를 추가할 Panel 배치
         searchPane.add(info); // 검색정보 추가
         searchPane.add(search); // 검색창 추가
-        originFileTable = fileTable;
         search.addActionListener(new SearchFileName()); // 검색창 이용을 위한 ActionListener 추가
         fileListMenu.add(searchPane, BorderLayout.WEST); // 검색 Panel 추가
 
-        JToggleButton toGridButton
-                = new JToggleButton(
-                resizeImage(currDir + "icon/switch_off.png", 32, 14), false);
+        JToggleButton toGridButton = new JToggleButton(resizeImage(currDir + "icon/switch_off.png", 32, 14), false);
         setButton(toGridButton);
         fileListMenu.add(toGridButton);
 
@@ -78,28 +72,15 @@ public class DrawFrame extends JFrame {;
 
     class SearchFileName implements ActionListener {
         java.util.List<File> fileArray = new ArrayList<File>();
-        java.util.List<File> originFileArray = new ArrayList<File>();
         File[] fileList;
-        File[] originFileList;
         FileTable t;
-        //FileTable fileTable = thisFrame.fileTable;
         FileGrid g;
         String path;
-        String realPath = fTree.realPath;
         public void actionPerformed(ActionEvent e) {
             String input = search.getText();
-            String[] pathArray = new String[fileTable.rowData.length];
 
             for(int i = 0; i < fileTable.rowData.length; i++) {
-//                System.out.println("fileTable.rowData["+i+"][0] :" + fileTable.rowData[i][0]);
-                String originFileName, fileName;
-                //if(fileTable==null) System.out.println("fileTable is null.");
-                originFileName = fileName = fileTable.rowData[i][0].toString();
-//                System.out.println("originFileName :" + originFileName);
-//                System.out.println("fileTable.filePath :" + fileTable.filePath);
-                pathArray[i] = fileTable.filePath + originFileName;
-//                System.out.println("pathArray[" + i + "] : " + pathArray[i]);
-                originFileArray.add(new File(pathArray[i].toString()));
+                String fileName = fileTable.rowData[i][0].toString();;
 
                 if(fileName.contains(input)) {
                     path = fileTable.filePath + fileName;
@@ -107,28 +88,20 @@ public class DrawFrame extends JFrame {;
                 }
             }
             fileList = fileArray.toArray(new File[fileArray.size()]);
-            originFileList = originFileArray.toArray(new File[originFileArray.size()]);
 
-            for(File f : fileList) {
-                System.out.println(f.getName());
-            }
-
-            originFileTable = new FileTable(originFileList, fileTable.filePath, thisFrame);
             t = new FileTable(fileList, fileTable.filePath, thisFrame);
             g = new FileGrid(fileList, fileTable.filePath, thisFrame);
-
 
             if(thisFrame.isIconView) {
                 thisFrame.setFileTable(t);
                 thisFrame.setFileGrid(g);
-            } else {
+            }
+            else {
                 thisFrame.setFileGrid(g);
                 thisFrame.setFileTable(t);
             }
-            fileArray.clear();
-            originFileArray.clear();
 
-            fileTable = originFileTable;
+            fileArray.clear();
         }
     }
 	
