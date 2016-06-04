@@ -4,7 +4,6 @@ import java.awt.event.*;
 import java.io.*;
 
 public class DataField extends JTabbedPane{
-
     private DrawFrame f;
     private final int MAX_HISTORY = 3;
     private JPanel jPanel = new JPanel(new BorderLayout()); // 화면을 둘로 쪼갠다: upperPane + textField
