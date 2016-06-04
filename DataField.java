@@ -20,6 +20,7 @@ public class DataField extends JTabbedPane{
 
     public DataField(DrawFrame f)throws IOException {
         this(null, f);
+
         drawFrame();
     }
     
